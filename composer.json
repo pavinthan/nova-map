@@ -1,0 +1,31 @@
+{
+    "name": "pavinthan/nova-map",
+    "description": "A Laravel Nova field.",
+    "keywords": [
+        "laravel",
+        "leaflet",
+        "nova",
+        "map"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pavinthan\\NovaMap\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Pavinthan\\NovaMap\\FieldServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
