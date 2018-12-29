@@ -20,101 +20,56 @@ class Map extends Field
      */
     public $showOnIndex = false;
 
-    /**
-     * Indicates the element height.
-     *
-     * @var int
-     */
-    public $height = 500;
-
-    /**
-     * Indicates the element zoom.
-     *
-     * @var int
-     */
-    public $zoom = 8;
-
     public function __construct($name, $attribute = null, $resolveCallback = null)
     {
         parent::__construct($name, $attribute, $resolveCallback);
 
-        $this->withMeta([
-            'height' => $this->height,
-            'zoom' => $this->zoom,
-        ]);
+        $this->withMeta($this->resolveConfigValues());
     }
 
-    public function height($height)
-    {
-        if ($height) {
-            return $this->withMeta([
-                'height' => $height
-            ]);
-        }
-    }
-
-    public function zoom($zoom)
-    {
-        if ($zoom) {
-            return $this->withMeta([
-                'zoom' => $zoom
-            ]);
-        }
-    }
-
-    public function spatialType($type)
+    public function height(int $height)
     {
         return $this->withMeta([
-            'spatialType' => $type
+            'height' => $height
         ]);
     }
 
-    public function latitude($latitude_field)
+    public function latitude(float $latitude)
     {
-        $this->attribute = null;
-
         return $this->withMeta([
-            'latitude_field' => $latitude_field
+            'latitude' => $latitude
         ]);
     }
 
-    public function longitude($longitude_field)
+    public function longitude(float $longitude)
     {
-        $this->attribute = null;
-
         return $this->withMeta([
-            'longitude_field' => $longitude_field
+            'longitude' => $longitude
         ]);
     }
 
-    public function geoJson($geoJsonField)
+    public function zoom(int $zoom)
     {
-        $this->attribute = $geoJsonField;
-
         return $this->withMeta([
-            'geoJsonField' => $geoJsonField
+            'zoom' => $zoom
         ]);
     }
 
-    public function resolveAttribute($resource, $attribute = null)
+    public function controls(array $controls)
     {
-        switch ($this->meta['spatialType'] ?? 'Polygon') {
-            case 'LatLon':
-                return [
-                    'lat' => $resource->{$this->meta['latitude_field']},
-                    'lon' => $resource->{$this->meta['longitude_field']},
-                ];
-            case 'LatLonField':
-                $parts = collect(explode(',', $resource->{$attribute}))->map(function ($item) {
-                    return trim($item);
-                });
-                return [
-                    'lat' => $parts[0],
-                    'lon' => $parts[1],
-                ];
-            case 'GeoJSON':
-            default:
-                return $resource->{$attribute};
-        }
+        return $this->withMeta([
+            'controls' => $controls
+        ]);
+    }
+
+    private function resolveConfigValues()
+    {
+        return array_only(config('nova-map'), [
+            'controls',
+            'height',
+            'latitude',
+            'longitude',
+            'zoom',
+        ]);
     }
 }

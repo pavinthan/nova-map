@@ -5,8 +5,8 @@
                 <l-map
                     class="w-full h-full rounded z-10"
                     ref="map"
-                    :center="center"
-                    :zoom="field.value ? field.zoom : 0"
+                    :zoom="field.zoom"
+                    :center="[field.latitude, field.longitude]"
                 >
                     <l-tile-layer
                         v-for="tileProvider in tileProviders"
@@ -49,7 +49,6 @@
             return {
                 map: null,
                 layers: [],
-                center: [0, 0],
                 tileProviders: [{
                     visible: true,
                     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -92,7 +91,7 @@
              * Apply leaflet.pm Toolbar.
              */
             applyToolbar() {
-                this.map.pm.addControls({
+                this.map.pm.addControls(this.field.controls || {
                     position: 'topleft', // toolbar position, options are 'topleft', 'topright', 'bottomleft', 'bottomright'
                     useFontAwesome: false, // use fontawesome instead of geomanIcons (you need to include fontawesome yourself)
                     drawMarker: true, // adds button to draw markers
