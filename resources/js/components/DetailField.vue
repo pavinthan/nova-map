@@ -67,9 +67,15 @@
             this.$nextTick(() => {
                 this.map = this.$refs.map.mapObject;
 
+                // Fit Bounding
                 if (this.field.value) {
                     L.geoJson(convertValue(this.field.value)).addTo(this.map);
                     this.map.fitBounds(L.geoJSON(convertValue(this.field.value)).getBounds());
+                }
+
+                // Apply the user configured zoom, can be from the field zoom method or config file as fallback
+                if (this.field.zoom) {
+                    this.map.setZoom(this.field.zoom);
                 }
             });
         },
