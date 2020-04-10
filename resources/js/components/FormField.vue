@@ -72,9 +72,28 @@
              * Set the initial layer.
              */
             initValue() {
+                console.log(this.field);
                 if (this.field.value) {
-                    const initialLayer = L.geoJson(this.field.value).addTo(this.map);
+                    const initialLayer = L.geoJson(this.convertValue(this.field.value)).addTo(this.map);
                     this.layers = this.layers.concat(Object.values(initialLayer._layers));
+                }
+            },
+
+            /**
+             * Convert the value to valid json object
+             * We expect PHP to store the data as stringified JSON object.
+             */
+            convertValue(json) {
+
+                if (typeof json === 'object') {
+                    return json;
+                }
+
+                try {
+                    return JSON.parse(json);
+                }
+                catch(e) {
+                    return {}
                 }
             },
 
@@ -83,7 +102,7 @@
              */
             setCenter() {
                 if (this.field.value) {
-                    this.map.fitBounds(L.geoJSON(this.field.value).getBounds());
+                    this.map.fitBounds(L.geoJSON(this.convertValue(this.field.value)).getBounds());
                 }
             },
 

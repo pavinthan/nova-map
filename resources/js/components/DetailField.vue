@@ -47,12 +47,29 @@
         },
 
         mounted() {
+            /**
+             * Convert the value to valid json object
+             * We expect PHP to store the data as stringified JSON object.
+             */
+            let convertValue = function (json) {
+                if (typeof json === 'object') {
+                    return json;
+                }
+
+                try {
+                    return JSON.parse(json);
+                }
+                catch(e) {
+                    return {}
+                }
+            };
+
             this.$nextTick(() => {
                 this.map = this.$refs.map.mapObject;
 
                 if (this.field.value) {
-                    L.geoJson(this.field.value).addTo(this.map);
-                    this.map.fitBounds(L.geoJSON(this.field.value).getBounds());
+                    L.geoJson(convertValue(this.field.value)).addTo(this.map);
+                    this.map.fitBounds(L.geoJSON(convertValue(this.field.value)).getBounds());
                 }
             });
         },
