@@ -72,10 +72,15 @@
              * Set the initial layer.
              */
             initValue() {
-                console.log(this.field);
                 if (this.field.value) {
                     const initialLayer = L.geoJson(this.convertValue(this.field.value)).addTo(this.map);
                     this.layers = this.layers.concat(Object.values(initialLayer._layers));
+                }
+
+
+                // Apply the user configured zoom, can be from the field zoom method or config file as fallback
+                if (this.field.zoom) {
+                    this.map.setZoom(this.field.zoom);
                 }
             },
 
